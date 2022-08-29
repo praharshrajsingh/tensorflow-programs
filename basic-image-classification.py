@@ -42,4 +42,14 @@ for i in range(25):
     plt.xlabel(class_names[train_labels[i]])
 plt.show()
 
+model = tf.keras.Sequential([
+    tf.keras.layers.Flatten(input_shape = (28,28)),     #reformats data from 2 dimensional to 1 dimensional array
+    #flatten basically takes the individual rows and lines them up
+    tf.keras.layers.Dense(128, activation = 'relu'),    #actual layer which has parameters to learn
+    #basically the number means the number of neurons it'll have
+    tf.keras.layers.Dense(10)
+])
+
+
+
 
