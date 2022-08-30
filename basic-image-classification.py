@@ -33,23 +33,37 @@ test_images = test_images / 255.0
 
 #inspecting the first 25 images in the set
 plt.figure(figsize=(10,10))
-for i in range(25):
-    plt.subplot(5,5,i+1)
-    plt.xticks([])
-    plt.yticks([])
-    plt.grid(False)
-    plt.imshow(train_images[i], cmap = plt.cm.binary)
-    plt.xlabel(class_names[train_labels[i]])
-plt.show()
+#for i in range(25):
+#    plt.subplot(5,5,i+1)
+#    plt.xticks([])
+#    plt.yticks([])
+#    plt.grid(False)
+#    plt.imshow(train_images[i], cmap = plt.cm.binary)
+#    plt.xlabel(class_names[train_labels[i]])
+#plt.show()
 
 model = tf.keras.Sequential([
-    tf.keras.layers.Flatten(input_shape = (28,28)),     #reformats data from 2 dimensional to 1 dimensional array
+    tf.keras.layers.Flatten(input_shape = (28,28)),
+    #reformats data from 2 dimensional to 1 dimensional array
     #flatten basically takes the individual rows and lines them up
-    tf.keras.layers.Dense(128, activation = 'relu'),    #actual layer which has parameters to learn
+    tf.keras.layers.Dense(128, activation = 'relu'),
+    #actual layer which has parameters to learn
     #basically the number means the number of neurons it'll have
     tf.keras.layers.Dense(10)
 ])
 
+model.compile(optimizer='adam',
+              loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits = True),
+              metrics = ['accuracy'])
 
+model.fit(train_images, train_labels, epochs = 10)
 
+test_loss, test_acc = model.evaluate(test_images, test_labels, verbose=2)
 
+print("\n Test accuracy:", test_acc)
+
+probability_model = tf.keras.Sequential([model,
+                                         tf.keras.layers.Softmax()])
+predictions = probability_model.predict(test_images)
+
+print(np.argmax(predictions[0]))
